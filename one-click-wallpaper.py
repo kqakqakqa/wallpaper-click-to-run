@@ -5,20 +5,21 @@ import time
 import urllib.request
 import sys
 
+# import windows_toasts
+
 
 def wallpaper():
-    print("getting url:")
+    print("getting url")
     archive = urllib.request.urlopen("https://www.bing.com/HPImageArchive.aspx?format=js&idx=0&n=1&mkt=zh-CN").read()
     archiveJson = json.loads(archive)
-    imageUrl = "https://www.bing.com" + archiveJson["images"][0]["url"]
-    imageUrl = imageUrl.replace("1920x1080", "UHD")
-    print(imageUrl + "\n")
+    imageUrl = "https://www.bing.com" + archiveJson["images"][0]["url"].replace("1920x1080", "UHD")
+    print(imageUrl)
 
-    print("getting path:")
+    print("getting path")
     imagePath = os.path.dirname(os.path.realpath(sys.argv[0])) + "\\wallpaper.jpg"
     if os.path.exists(imagePath):
         os.remove(imagePath)
-    print(imagePath + "\n")
+    print(imagePath)
 
     print("downloading")
     urllib.request.urlretrieve(imageUrl, imagePath)
@@ -32,13 +33,22 @@ def wallpaper():
     )
 
 
-trialLeft = 12
-while trialLeft > 0:
+# def toast(s):
+#     toaster = windows_toasts.WindowsToaster("Wallpaper Only Once")
+#     newToast = windows_toasts.Toast()
+#     newToast.text_fields = [s]
+#     toaster.show_toast(newToast)
+
+
+for i in range(0, 12):
+    print(f"\ntrial {i + 1}/12")
     try:
         wallpaper()
-        print("done")
         break
-    except:
-        print("retrying")
-        trialLeft -= 1
+    except Exception as e:
+        e = "exception: " + str(e)
+        print(e)
+        # if i == 11:
+        #     toast(e)
+        #     break
         time.sleep(5)
